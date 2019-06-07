@@ -3,7 +3,7 @@
 /*
  * Augmented Red Black Tree (set/map) - based on famous CLRS book)
  *  1. Supports order statistics (order is 1-based: from 1 to N): select/rank
- *  2. Max 2G objects (size and color is packed in ui32, so size has ui31 type)
+ *  2. Max objects count is 2G (size and color is packed in ui32, so size has ui31 type)
  *  3. STL-like iterators supported (begin/rbegin/find/select)
  * 
  * P.S. multi_* versions aren't supported

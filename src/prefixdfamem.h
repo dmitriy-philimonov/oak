@@ -1,5 +1,18 @@
 #pragma once
 
+/*
+ * Same prefix tree based on deterministic finite automaton, although
+ * endings of strings are stored as char arrays instead of separate states
+ * to save some memory.
+ *
+ * P.S. There's a hack here, instead of holding a separate array for string endings,
+ * the tree stores chars in the same array of states, it was thought that
+ * data locality should increase performance, and probably it does,
+ * however code's become quite complex, which is why amortized insert/search
+ * performance suffers a bit
+ */
+
+
 #include "defines.h"
 #include <string>
 #include <vector>

@@ -5,7 +5,7 @@ BUILDDIR=./build
 TESTS=$(BUILDDIR)/test_oak
 BENCHMARK=$(BUILDDIR)/benchmark_oak
 
-all: 
+all:
 	$(MAKE) -C tests
 	$(MAKE) -C benchmark
 
@@ -15,7 +15,7 @@ test:
 benchmark:
 	$(BENCHMARK)
 
-	
+
 .PHONY: clean test benchmark
 clean:
 	$(MAKE) clean -C benchmark

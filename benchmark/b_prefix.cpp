@@ -14,26 +14,14 @@ class TWarAndPiece{
 private:
     std::deque<std::string> Words;
 private:
-    std::string Filter(const std::string& word) {
-        static const std::string filter_out(",.“");
-        std::string r;
-        for (size_t i=0; i<word.size(); ++i) {
-            if (filter_out.find(word[i]) == std::string::npos)
-                r += static_cast<char>(tolower(word[i]));
-        }
-        return r;
-    }
     void ReadFile(const std::string& fileName) {
         std::ifstream file(fileName); std::string word;
-        while(file >> word) {
-            if (std::none_of(word.begin(), word.end(), [](char c) { return std::isalpha(c);}))
-                continue;
-            Words.push_back(Filter(word));
-        }
+        while(file >> word)
+            Words.push_back(word);
     }
 public:
     TWarAndPiece() {
-        ReadFile("../../war_and_peace.txt");
+        ReadFile("../data/words.txt");
     }
     size_t size() const noexcept { return Words.size(); }
 

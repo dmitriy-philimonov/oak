@@ -1,5 +1,19 @@
 #pragma once
 
+/*
+ * Realization of prefix tree based of deterministic finite automaton (dfa).
+ * Basically, each prefix has it's own state, and character is a signal for moving from
+ * one state to another.
+ *   1. Yes, it consumes quite a lot of memory
+ *   2. It surprisingly fast, amortized tests for real words look better than STL hash gives,
+ * however, detailed research showed, that it's because of high frequency of short english words
+ * in the input, which was, by the way, got from one very old and famous book.
+ * 
+ * For short words it's amazingly very fast, for long words - amazingly slow.
+ * Some additional research should be conducted here, I reckon.
+ */
+
+
 #include "defines.h"
 #include <iostream>
 #include <iomanip>
