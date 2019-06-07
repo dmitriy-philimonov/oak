@@ -48,3 +48,31 @@ TEST(TPrefixTree, AppendRealWords) {
     tree.Append("shore");
     EXPECT_EQ(tree.InOrder(), V(E("by"), "s", "e", E("a"), E("lls"), "h", "e", E(), E("lls"), E("ore"), E("the")));
 }
+TEST(TPrefixTree, Remove) {
+    TTree tree;
+    tree.Append("bac");
+    tree.Append("baca");
+    tree.Remove("bac");
+    EXPECT_EQ(tree.size(), 1U);
+    EXPECT_TRUE(tree.Exists("baca"));
+    EXPECT_FALSE(tree.Exists("bac"));
+    
+    tree.Remove("baca");
+    EXPECT_EQ(tree.size(), 0U);
+}
+TEST(TPrefixTree, RemoveRealWords) {
+    TTree tree;
+    tree.Append("she");
+    tree.Append("sells");
+    tree.Append("sea");
+    tree.Append("shells");
+    tree.Append("by");
+    tree.Append("the");
+    tree.Append("sea");
+    tree.Append("shore");
+    
+    tree.Remove("sea");
+    tree.Remove("shells");
+    EXPECT_FALSE(tree.Exists("sea"));
+    EXPECT_FALSE(tree.Exists("shells"));
+}

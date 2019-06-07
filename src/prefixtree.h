@@ -33,22 +33,25 @@ namespace NPrefix {
         std::vector<TInner> Keys;
     };
     using TKeyRefs = std::vector<std::string_view>;
+    using TKeyIt = std::vector<TNode::TInner>::iterator;
 
     class TTree {
     private:
-        TNode* Root = nullptr;
+        TNode Root;
         ui32 Size = 0;
     private:
         size_t Prefix(const std::string_view x, const std::string_view key) const noexcept;
         TNode* Split(TNode::TInner& parent, ui32 i);
-        void AppendStrView(std::string_view x);
+        void Join(TNode* cur, TKeyIt parent);
+        bool AppendStrView(std::string_view x);
         bool ExistsStrView(std::string_view x) const noexcept;
+        bool RemoveStrView(std::string_view x);
     public:
         TTree(){}
         ~TTree() {
             clear();
         }
-        void Append(const std::string& s) {
+        bool Append(const std::string& s) {
             // copy '\0' too, it's very important
             return AppendStrView(std::string_view(s.c_str(), s.size()+1));
         }
@@ -56,8 +59,12 @@ namespace NPrefix {
             // copy '\0' too, it's very important
             return ExistsStrView(std::string_view(x.c_str(), x.size()+1));
         }
+        bool Remove(const std::string& s) {
+            return RemoveStrView(std::string_view(s.c_str(), s.size()+1));
+        }
+        
         template<size_t N>
-        void Append(const char(&s)[N]) {
+        bool Append(const char(&s)[N]) {
             // Is it a null-terminated C-string?
             if (s[N-1] == '\0')
                 return AppendStrView(std::string_view(&s[0], N));
