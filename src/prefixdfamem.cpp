@@ -28,14 +28,14 @@ namespace NMemoryOptimized {
     }
 
     bool TDfa::UnforldMatchSymbolsFast(ui32 curState) {
-        // copy chars to nearest neighbour if vector capacity is enough, 
+        // copy chars to nearest neighbour if vector capacity is enough,
         // overwise all references become dead ...
         if (M.capacity() == M.size())
             return false;
         auto& sv = M[curState];
         TU& info = sv[FinalSymbol];
         TU& data = sv[FinalSymbol+1];
-        
+
         info.SetStatus(EMPTY);
         ui32 nextState = NextState++;
         // if this routine is called, this shouldn't trigger a vector memory reallocation
@@ -45,7 +45,7 @@ namespace NMemoryOptimized {
         else
             SaveEnding(M[nextState], (char*)data.Storage()+1, info.GetSize()-1);
         sv.resize(1); // only future constructor, which sets memory to EMPTY
-        
+
         ui16 id = DoXLAT(*data.Storage())+1;
         sv.resize(id+1);              // overwrite old ending string with EMPTY value
         sv[id].NextState = nextState; // and then set ref to a new state
@@ -120,7 +120,7 @@ namespace NMemoryOptimized {
             curState = sv[id].NextState; ++i;
             if (curState != EMPTY)
                 continue;
-            
+
             ui32 newState = NextState++;
             sv[id].NextState = newState;
 
@@ -172,7 +172,7 @@ namespace NMemoryOptimized {
             ui8 symbol = static_cast<ui8>(x[i]);
             if (!HAS_XLAT[symbol]) return false;
             ui16 id = XLAT[symbol]+1;
-            
+
             if (sv.size() <= id) return false;
             ui32 state = sv[id].NextState;
             if (state == EMPTY) return false;
@@ -188,7 +188,7 @@ namespace NMemoryOptimized {
             if (HAS_XLAT[symbol]) {
                 ++RLen; RXLAT[XLAT[symbol]] = symbol;
             }
-        
+
         std::cout << '\n' << std::setw(3) << "id" << ") $";
         for(ui16 id=0; id<RLen; ++id)
             std::cout << ' ' << std::setw(3) << RXLAT[id];

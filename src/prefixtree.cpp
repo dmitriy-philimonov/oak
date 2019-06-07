@@ -5,19 +5,19 @@
 namespace NPrefix {
     /*
      * x always has '\0' at the end, it's very important here
-     * 
+     *
      * Case 1: return key.size() < x.size()
      *   x='abcde\0'
      * key='abc'
-     * 
+     *
      * Case 2: return key.size() == x.size()
      *   x='ab\0'
      * key='ab\0'
-     * 
+     *
      * Case 3: return i=2 < key.size()
      *   x='ab\0'
      * key='abc'
-     * 
+     *
      * Case 4: return i=2 < key.size()
      *   x='ab\0'
      * key='abcde\0'
@@ -85,7 +85,7 @@ namespace NPrefix {
             cur = Split(*it, i);
         }
     }
-    bool TTree::ExistsStrView(std::string_view x) const noexcept {       
+    bool TTree::ExistsStrView(std::string_view x) const noexcept {
         const TNode* cur = &Root;
         while(true) {
             auto& keys = cur->Keys;
@@ -133,7 +133,7 @@ namespace NPrefix {
                 // case 2 -> full match
                 keys.erase(it); Join(cur, prevIt);
                 --Size; return true;
-            } 
+            }
             if (i == key.size()) {
                 // case 1 -> key is a prefix of the x
                 x.remove_prefix(i);

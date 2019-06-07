@@ -36,7 +36,7 @@ TEST(TPrefixDfa, RealWordInsert) {
     dfa.insert("sells");
     dfa.insert("shore");
     dfa.insert("sea");
-    
+
     EXPECT_TRUE(dfa.exists("she"));
     EXPECT_TRUE(dfa.exists("sells"));
     EXPECT_TRUE(dfa.exists("sea"));

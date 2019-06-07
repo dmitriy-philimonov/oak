@@ -8,7 +8,7 @@
  *   2. It surprisingly fast, amortized tests for real words look better than STL hash gives,
  * however, detailed research showed, that it's because of high frequency of short english words
  * in the input, which was, by the way, got from one very old and famous book.
- * 
+ *
  * For short words it's amazingly very fast, for long words - amazingly slow.
  * Some additional research should be conducted here, I reckon.
  */
@@ -33,7 +33,7 @@ namespace NPrefix {
     private:
         ui8 NextId = 0;
         ui32 NextState = EMPTY + 1;
-        
+
         TMatrix M;
         ui32 Size=0;
     private:

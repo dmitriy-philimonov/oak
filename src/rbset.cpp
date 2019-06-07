@@ -16,11 +16,11 @@ namespace NRBTree {
         x->Right = y->Left;
         if (y->Left != Nil)
             y->Left->Parent = x;
-        
+
         TNode* xParent = x->Parent;
         y->Left = x;
         x->Parent = y;
-        
+
         y->Parent = xParent;
         if (xParent == Nil) {
             Root = y;
@@ -39,11 +39,11 @@ namespace NRBTree {
         y->Left = x->Right;
         if (x->Right != Nil)
             x->Right->Parent = y;
-        
+
         TNode* yParent = y->Parent;
         x->Right = y;
         y->Parent = x;
-        
+
         x->Parent = yParent;
         if (yParent == Nil) {
             Root = x;
@@ -193,7 +193,7 @@ namespace NRBTree {
     }
     ui32 TTree::Rank(TNode* x) noexcept {
         if (x == Nil) return 0;
-        
+
         ui32 r = x->Left->Size + 1;
         while(x->Parent != Nil) {
             if (x == x->Parent->Right)

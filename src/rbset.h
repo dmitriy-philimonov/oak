@@ -5,7 +5,7 @@
  *  1. Supports order statistics (order is 1-based: from 1 to N): select/rank
  *  2. Max objects count is 2G (size and color is packed in ui32, so size has ui31 type)
  *  3. STL-like iterators supported (begin/rbegin/find/select)
- * 
+ *
  * P.S. multi_* versions aren't supported
  */
 
@@ -35,7 +35,7 @@ namespace NRBTree {
             TAllocator::DeAllocate(obj);
         }
     };
-    
+
 
     class TTree {
     public:
@@ -77,7 +77,7 @@ namespace NRBTree {
         void RbInsertFixup(TNode* z);
         void RbDeleteFixup(TNode* x);
         TNode* DeleteNode(TNode* z) noexcept;
-        
+
         static TNode* Minimum(TNode* x) noexcept {
             while(x->Left != Nil) x = x->Left;
             return x;
@@ -405,9 +405,9 @@ namespace NRBTree {
             return this->template InsertImpl(key, std::forward<Args>(args)...);
         }
     public:
-        class TMapIterator : public TIterator {           
+        class TMapIterator : public TIterator {
         public:
-            TMapIterator(TNode* cur): TIterator(cur) {}            
+            TMapIterator(TNode* cur): TIterator(cur) {}
 
             const TKeyData<TKey, TData>* operator ->() const noexcept {
                 return static_cast<TNodeData<TKey, TData>*>(Cur);
@@ -458,7 +458,7 @@ namespace NRBTree {
         << '\n';
         /* print out our tree */
         if (Root == Nil) { std::cout << "Graph={}\n"; return; }
-        
+
         std::cout << "Graph={\n";
         struct TQ{
             TNode* Node;

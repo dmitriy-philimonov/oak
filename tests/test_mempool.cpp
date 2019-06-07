@@ -7,7 +7,7 @@ using namespace NMemory;
 TEST(TPool, NearestPowerOfTwo) {
     EXPECT_EQ(TUtil::NearestPowerOfTwo(15), 16ULL);
     EXPECT_EQ(TUtil::NearestPowerOfTwo(16), 16ULL);
-    
+
     EXPECT_EQ(TUtil::NearestPowerOfTwo(0), 0ULL);
     EXPECT_EQ(TUtil::NearestPowerOfTwo(1), 1ULL);
     EXPECT_EQ(TUtil::NearestPowerOfTwo(3), 4ULL);
@@ -45,7 +45,7 @@ TEST(TPool, Exponential) {
     pool.Append(T()); // 1(12/16) 2(12/32)
     pool.Append(T()); // 1(12/16) 2(24/32)
     EXPECT_EQ(pool.BlocksCount(), 2ULL);
-    
+
     pool.Append(T()); // 1(12/16) 2(24/32) 3(12/64)
     pool.Append(T()); // 1(12/16) 2(24/32) 3(24/64)
     pool.Append(T()); // 1(12/16) 2(24/32) 3(36/64)

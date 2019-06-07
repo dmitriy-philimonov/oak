@@ -20,7 +20,7 @@ TEST(TPrefixTree, AppendRepeat) {
     tree.Append("aba");
     tree.Append("abab");
     tree.Append("aba");
-    
+
     EXPECT_EQ(tree.InOrder(), V("aba", E(), E("b")));
 }
 TEST(TPrefixTree, AppendComplex) {
@@ -32,7 +32,7 @@ TEST(TPrefixTree, AppendComplex) {
     tree.Append("b");
     tree.Append("bc");
     tree.Append("aba");
-    
+
     EXPECT_TRUE(tree.Exists("baca"));
     EXPECT_EQ(tree.InOrder(), V("aba", E(), E("b"), "b", E(), "ac", E(), E("a"), E("c")));
 }
@@ -56,7 +56,7 @@ TEST(TPrefixTree, Remove) {
     EXPECT_EQ(tree.size(), 1U);
     EXPECT_TRUE(tree.Exists("baca"));
     EXPECT_FALSE(tree.Exists("bac"));
-    
+
     tree.Remove("baca");
     EXPECT_EQ(tree.size(), 0U);
 }
@@ -70,7 +70,7 @@ TEST(TPrefixTree, RemoveRealWords) {
     tree.Append("the");
     tree.Append("sea");
     tree.Append("shore");
-    
+
     tree.Remove("sea");
     tree.Remove("shells");
     EXPECT_FALSE(tree.Exists("sea"));

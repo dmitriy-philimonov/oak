@@ -82,7 +82,7 @@ namespace NMemory {
         void ReAllocate() {
             for(TBlock b: B)
                 delete[] b.Ptr;
-            
+
             size_t firstSize = B.front().Size;
             B.clear();
 
@@ -101,7 +101,7 @@ namespace NMemory {
         }
         char* Append(const char* ptr, const size_t size) {
             CheckSize(size);
-            
+
             char* strPtr = static_cast<char*>(CurPtr());
             std::memcpy(strPtr, ptr, size);
 

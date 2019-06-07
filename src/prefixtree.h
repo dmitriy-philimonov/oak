@@ -62,7 +62,7 @@ namespace NPrefix {
         bool Remove(const std::string& s) {
             return RemoveStrView(std::string_view(s.c_str(), s.size()+1));
         }
-        
+
         template<size_t N>
         bool Append(const char(&s)[N]) {
             // Is it a null-terminated C-string?
@@ -77,7 +77,7 @@ namespace NPrefix {
         bool Exists(const char(&x)[N]) {
             if (x[N-1] == '\0')
                 return ExistsStrView(std::string_view(&x[0], N));
-            
+
             std::string xs(&x[0], N);
             return ExistsStrView(std::string_view(xs.c_str(), xs.size()+1));
         }

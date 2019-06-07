@@ -230,10 +230,10 @@ BENCHMARK(PREFIX_PREFIXTREE_SEARCH);
 BENCHMARK(PREFIX_RBTREE_SEARCH);
 BENCHMARK(PREFIX_STLSET_SEARCH);
 
-/* 
+/*
  * Separate memory consumption benchmark shows:
  * // count(uniq(keys)) = 27185, count(keys) = 565622
- * 
+ *
  *   CONTAINER    VSS    VM
  * ==========================
  * unordered_set 4744K 15636K

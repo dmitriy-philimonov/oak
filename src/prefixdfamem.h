@@ -32,7 +32,7 @@ namespace NMemoryOptimized {
             ui16 Size;
         } Info;
         ui8 Ending[4];
-        
+
         ui16 GetStatus() const noexcept { return Info.Status; }
         void SetStatus(ui16 status) { Info.Status = status; }
         ui16 GetSize() const noexcept { return Info.Size; }
@@ -50,7 +50,7 @@ namespace NMemoryOptimized {
     private:
         ui8 NextId = 0;
         ui32 NextState = EMPTY + 1;
-        
+
         TMatrix M;
         TEnding E;
         ui32 Size=0;

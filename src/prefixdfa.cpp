@@ -24,16 +24,16 @@ namespace NPrefix {
             ui16 id = DoXLAT(static_cast<ui8>(c))+1;
             auto& sv = M[curState];
             ExpandSV(sv, id);
-            
+
             ui32 state = sv[id];
             if (state != EMPTY) {
                 curState = state;
                 continue;
             }
-            
+
             state = NextState++;
             sv[id] = state;
-            
+
             ExpandM(M, state);
             curState = state;
         }
@@ -48,7 +48,7 @@ namespace NPrefix {
             ui8 symbol = static_cast<ui8>(c);
             if (!HAS_XLAT[symbol]) return false;
             ui16 id = XLAT[symbol]+1;
-            
+
             const auto& sv = M[curState];
             if (sv.size() <= id) return false;
             ui32 state = sv[id];
@@ -65,7 +65,7 @@ namespace NPrefix {
             if (HAS_XLAT[symbol]) {
                 ++RLen; RXLAT[XLAT[symbol]] = symbol;
             }
-        
+
         std::cout << std::setw(3) << "id" << ") $";
         for(ui16 id=0; id<RLen; ++id)
             std::cout << ' ' << RXLAT[id];
