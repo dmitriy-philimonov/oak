@@ -76,3 +76,56 @@ TEST(TPrefixTree, RemoveRealWords) {
     EXPECT_FALSE(tree.Exists("sea"));
     EXPECT_FALSE(tree.Exists("shells"));
 }
+TEST(TPrefixTree, KeysWithPrefix) {
+    TTree tree;
+    tree.Append("aba");
+    tree.Append("abab");
+    tree.Append("b");
+    tree.Append("bac");
+    tree.Append("baca");
+    tree.Append("bc");
+
+    auto it = tree.KeysWithPrefix("ba");
+    EXPECT_TRUE(it);
+    EXPECT_EQ(it.Key(), "bac");
+    ++it;
+    EXPECT_EQ(it.Key(), "baca");
+    ++it;
+    EXPECT_FALSE(it);
+
+    ui32 len=0; // {b,bac,baca,bc}
+    for(it=tree.KeysWithPrefix("b"); it; ++it) ++len;
+    EXPECT_EQ(len, 4U);
+
+    len=0; // {bac,baca}
+    for(it=tree.KeysWithPrefix("bac"); it; ++it) ++len;
+    EXPECT_EQ(len, 2U);
+
+    len=0;
+    for(it=tree.KeysWithPrefix("aba"); it; ++it) ++len;
+    EXPECT_EQ(len, 2U);
+
+    len=0;
+    for(it=tree.KeysWithPrefix("abab"); it; ++it) ++len;
+    EXPECT_EQ(len, 1U);
+}
+
+TEST(TPrefixTree, KeysWithPrefixRoot) {
+    TTree tree;
+    tree.Append("aba");
+    tree.Append("abab");
+    tree.Append("b");
+    tree.Append("bac");
+    tree.Append("baca");
+    tree.Append("bc");
+
+    auto it = tree.AllKeys();
+    EXPECT_TRUE(it);
+    EXPECT_EQ(it.Key(), "aba");
+    EXPECT_EQ((++it).Key(), "abab");
+    EXPECT_EQ((++it).Key(), "b");
+    EXPECT_EQ((++it).Key(), "bac");
+    EXPECT_EQ((++it).Key(), "baca");
+    EXPECT_EQ((++it).Key(), "bc");
+    EXPECT_FALSE(bool(++it));
+}

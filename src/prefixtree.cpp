@@ -160,7 +160,7 @@ namespace NPrefix {
     }
 
     struct TWithLevel {
-        using TIt = std::vector<TNode::TInner>::const_iterator;
+        using TIt = TCKeyIt;
         TIt CurIt;
         TIt EndIt;
         ui32 L;
@@ -216,5 +216,83 @@ namespace NPrefix {
             info.maxHeight = std::max(info.maxHeight, wl.L);
         });
         std::cout << "Nodes=" << info.nodesCount << ", Height=" << info.maxHeight << '\n';
+    }
+
+
+    TIterator::TIterator(const TTree* tree)
+        : T(tree)
+    {
+        if (T->Root.Keys.empty()) return;
+        S.emplace_back(std::string(), T->Root.Keys.begin(), T->Root.Keys.end());
+        GoDownToLeaf(std::string(), T->Root.Keys.begin());
+    }
+
+    TIterator::TIterator(std::string_view x, const TTree* tree)
+        : T(tree)
+    {
+        std::string p;
+        const TNode* cur = &T->Root;
+        while(true) {
+            auto& keys = cur->Keys;
+            auto it = std::lower_bound(keys.begin(), keys.end(), x, TInnerFirstLetterCmp());
+            if (it == keys.end()) {
+                // remain S empty
+                return;
+            }
+
+            std::string_view key = it->Key;
+            // T::Prefix needs x to be null-terminated string
+            ui32 i = T->Prefix(x, key);
+            if (i == 0) {
+                // remain S empty
+                return;
+            }
+            if (i == x.size()) {
+                // case 2 -> full match
+                GoDownToLeaf(std::move(p), it);
+                return;
+            }
+            if (i == key.size()) {
+                // case 1 -> key is a prefix of the x
+                x.remove_prefix(i);
+                // if the rest of x is only '\0' -> pretend there's no '\0' at all
+                if (x.front() == '\0') {
+                    GoDownToLeaf(std::move(p), it);
+                    return;
+                }
+                p.append(key.data(), key.size());
+                cur = it->Link;
+                continue;
+            }
+            // case 3,4 -> i < key.size()
+            if (x[i] == '\0') // only if x is the prefix of key
+                GoDownToLeaf(std::move(p), it);
+            return;
+        } // while
+    }
+
+    void TIterator::GoDownToLeaf(std::string p, TCKeyIt b) {
+        while (b->Link) {
+            auto& childKeys = b->Link->Keys;
+            p.append(b->Key.data(), b->Key.size());
+            S.emplace_back(p, childKeys.begin(), childKeys.end());
+            b=childKeys.begin();
+        }
+        p.append(b->Key.data(), b->Key.size()-1);
+        S.emplace_back(std::move(p), b, b+1); //b,b+1 is a fake end marker here
+    }
+
+    TIterator& TIterator::operator ++() noexcept {
+        while(!S.empty()) {
+            auto& top = S.back();
+            auto b = top.Begin + 1;
+            if (b == top.End) {
+                S.pop_back();
+                continue;
+            }
+            top.Begin = b; GoDownToLeaf(top.P, b);
+            break;
+        }
+        return *this;
     }
 }

@@ -149,15 +149,17 @@ namespace NRBTree {
             Cur = TTree::Successor(Cur);
             return *this;
         }
-        TIterator& operator ++(int) noexcept {
-            return this->operator++();
+        TIterator operator ++(int) noexcept {
+            TIterator r = *this;
+            return this->operator++(), r;
         }
         TIterator& operator --() noexcept {
             Cur = TTree::Predecessor(Cur);
             return *this;
         }
-        TIterator& operator --(int) noexcept {
-            return this->operator--();
+        TIterator operator --(int) noexcept {
+            TIterator r = *this;
+            return this->operator--(), r;
         }
     };
     class TReverseIterator: public TIteratorBase {
@@ -167,15 +169,17 @@ namespace NRBTree {
             Cur = TTree::Predecessor(Cur);
             return *this;
         }
-        TReverseIterator& operator ++(int) noexcept {
-            return this->operator++();
+        TReverseIterator operator ++(int) noexcept {
+            TReverseIterator r = *this;
+            return this->operator++(), r;
         }
         TReverseIterator& operator --() noexcept {
             Cur = TTree::Successor(Cur);
             return *this;
         }
-        TReverseIterator& operator --(int) noexcept {
-            return this->operator--();
+        TReverseIterator operator --(int) noexcept {
+            TReverseIterator r = *this;
+            return this->operator--(), r;
         }
     };
 

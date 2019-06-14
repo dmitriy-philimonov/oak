@@ -3,10 +3,18 @@
 /*
  *  R-way compressed trie / prefix tree
  *  1. Insert is quite slow, insert in the middle of a vector takes place: O(n)
- *  2. Search is very fast
+ *  2. Search is quite fast
  *  3. Memory sufficient approach:
  *   - on big inputs std::string uses so called 'small string optimization'
  *   - R-way sorted vector of partial keys in each node
+ * P.S. Currently it supports only null-terminated strings (realization is based on that fact)
+ * P.P.S. Due to a specific application of this prefix tree, the interface is customized (not STL-like)
+ *   TTree tree;
+ *   tree.Append("abc");
+ *   tree.Exists("bcd");
+ *   tree.Remove("abc");
+ *   for(auto it=tree.AllKeys();it;++it)
+ *       std::cout << it.Key() << '\n';
  */
 
 #include "defines.h"
@@ -34,6 +42,53 @@ namespace NPrefix {
     };
     using TKeyRefs = std::vector<std::string_view>;
     using TKeyIt = std::vector<TNode::TInner>::iterator;
+    using TCKeyIt = std::vector<TNode::TInner>::const_iterator;
+
+    class TTree;
+    class TIterator {
+    private:
+        struct TUnit {
+            std::string P;
+            TCKeyIt Begin;
+            TCKeyIt End;
+
+            TUnit(const std::string& p, TCKeyIt b, TCKeyIt e)
+                : P(p), Begin(b), End(e)
+            {}
+            TUnit(std::string&& p, TCKeyIt b, TCKeyIt e)
+                : P(std::move(p)), Begin(b), End(e)
+            {}
+        };
+        /*
+           1. The last S element is used to store the current leaf to show via Key() method
+           2. For other cases S is used as:
+                -> Prefix is an accumulated string for [Begin,End) key ranges
+                -> Prefix + Begin->Key is actual value for a leaf, or a new Prefix for a subtree
+
+            Usage:
+                TTree tree; // ... fill tree ...
+                for(auto it = tree.KeysWithPrefix("pre"); it; ++it)
+                    std::cout << it.Key() << '\n';
+                }
+
+         */
+        std::vector<TUnit> S;
+        const TTree* T;
+    private:
+        void GoDownToLeaf(std::string p, TCKeyIt b);
+    public:
+        TIterator() : T(nullptr) {}
+        TIterator(const TTree* tree);
+        TIterator(std::string_view x, const TTree* tree);
+        std::string Key() const noexcept { return S.back().P; }
+        operator bool() const noexcept { return !S.empty(); }
+        TIterator& operator ++() noexcept;
+        TIterator& operator=(TIterator&& other) {
+            S = std::move(other.S);
+            T = other.T;
+            return *this;
+        }
+    };
 
     class TTree {
     private:
@@ -62,6 +117,12 @@ namespace NPrefix {
         bool Remove(const std::string& s) {
             return RemoveStrView(std::string_view(s.c_str(), s.size()+1));
         }
+        TIterator KeysWithPrefix(const std::string& s) const noexcept {
+            return TIterator(std::string_view(s.c_str(), s.size()+1), this);
+        }
+        TIterator AllKeys() const noexcept {
+            return TIterator(this);
+        }
 
         template<size_t N>
         bool Append(const char(&s)[N]) {
@@ -86,5 +147,7 @@ namespace NPrefix {
         TKeyRefs InOrder() const noexcept;
         void clear() noexcept;
         ui32 size() const noexcept { return Size; }
+
+        friend class TIterator;
     };
 }
