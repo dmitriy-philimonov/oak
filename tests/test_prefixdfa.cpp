@@ -1,9 +1,9 @@
-#include "prefixdfamem.h"
+#include "prefixdfa.h"
 #include <gtest/gtest.h>
 
-using namespace NPrefix::NMemoryOptimized;
+using namespace NPrefix;
 
-TEST(TPrefixDfaMO, Endings) {
+TEST(TPrefixDfa, EasyInsert) {
     TDfa dfa;
     dfa.insert("she");
     dfa.insert("sea");
@@ -15,7 +15,7 @@ TEST(TPrefixDfaMO, Endings) {
     EXPECT_FALSE(dfa.exists("he"));
 }
 
-TEST(TPrefixDfaMO, EasyInsert) {
+TEST(TPrefixDfa, EasyInsert2) {
     TDfa dfa;
     dfa.insert("the");
     dfa.insert("this");
@@ -26,7 +26,7 @@ TEST(TPrefixDfaMO, EasyInsert) {
     EXPECT_FALSE(dfa.exists("where"));
 }
 
-TEST(TPrefixDfaMO, RealWordInsert) {
+TEST(TPrefixDfa, RealWordInsert) {
     TDfa dfa;
     dfa.insert("she");
     dfa.insert("by");
@@ -46,14 +46,7 @@ TEST(TPrefixDfaMO, RealWordInsert) {
     EXPECT_TRUE(dfa.exists("shore"));
 }
 
-TEST(TPrefixDfaMO, CorrectUnfolding) {
-    TDfa dfa;
-    dfa.insert("shells");
-    dfa.insert("she");
-    EXPECT_TRUE(dfa.exists("she"));
-}
-
-TEST(TPrefixDfaMO, FitIntoWithEndAfterLastCharacter) {
+TEST(TPrefixDfa, ShortWordAfterLongWord) {
     TDfa dfa;
     dfa.insert("she");
     dfa.insert("s");
