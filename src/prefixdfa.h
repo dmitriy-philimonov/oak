@@ -8,6 +8,9 @@
  *   2. It surprisingly fast, amortized tests for real words look better than STL hash gives,
  * however, detailed research showed, that it's because of high frequency of short english words
  * in the input, which was, by the way, got from one very old and famous book.
+ *   3. Frequent using of insert/erase commands reduces data locality, which affects cache performance and,
+ * therefore, reduces total performance. The fastest search speed was achieved when storage was filled
+ * with insert commands only and then tested.
  *
  * For short words it's amazingly very fast, for long words - amazingly slow.
  * Some additional research should be conducted here, I reckon.
@@ -15,11 +18,8 @@
 
 
 #include "defines.h"
-#include <iostream>
-#include <iomanip>
-#include <string_view>
 #include <vector>
-#include <bitset>
+#include <string>
 
 namespace NPrefix {
     enum TConstants {
@@ -28,12 +28,19 @@ namespace NPrefix {
     };
 
     using TMatrix = std::vector<std::vector<ui32>>;
+    using TStates = std::vector<ui32>;
+    struct TVisit {
+        ui32 CurState;
+        ui32 CurId;
+    };
+    using TStateHistory = std::vector<TVisit>;
 
     class TDfa {
     private:
         ui8 NextId = 0;
         ui32 NextState = EMPTY + 1;
 
+        TStates F;
         TMatrix M;
         ui32 Size=0;
     private:
@@ -45,14 +52,17 @@ namespace NPrefix {
         ui8 HAS_XLAT[AlphabetSize] = {0};
 
         ui8 DoXLAT(ui8 symbol) noexcept;
-        void ExpandSV(std::vector<ui32>& sv, ui16 id);
+        ui32 GetNextState() noexcept;
+        void UnfoldStateHistory(TStateHistory& sH);
+        void ExpandSV(TStates& sv, ui16 id);
         void ExpandM(TMatrix& m, ui32 newState);
     public:
         TDfa()
-            : M(DefaultSize, std::vector<ui32>(1, EMPTY))
+            : M(DefaultSize, TStates(1, EMPTY))
         {}
         bool insert(const std::string& x);
         bool exists(const std::string& x) const noexcept;
+        bool erase(const std::string& x) noexcept;
         ui32 size() const noexcept { return Size; }
         ui32 StateCount() const noexcept { return NextState; }
 

@@ -52,3 +52,49 @@ TEST(TPrefixDfa, ShortWordAfterLongWord) {
     dfa.insert("s");
     EXPECT_TRUE(dfa.exists("s"));
 }
+
+TEST(TPrefixDfa, Erase) {
+    TDfa dfa;
+    dfa.insert("she");
+    dfa.insert("sea");
+    dfa.insert("shell");
+    dfa.insert("shells");
+
+    dfa.erase("she");
+    EXPECT_TRUE(dfa.exists("shell"));
+
+    dfa.erase("shell");
+    EXPECT_TRUE(dfa.exists("sea"));
+    EXPECT_TRUE(dfa.exists("shells"));
+
+    dfa.erase("shells");
+    EXPECT_TRUE(dfa.exists("sea"));
+
+    dfa.insert("seasalt");
+    dfa.insert("sun");
+    EXPECT_TRUE(dfa.exists("sea"));
+    EXPECT_TRUE(dfa.exists("seasalt"));
+    EXPECT_TRUE(dfa.exists("sun"));
+
+    dfa.erase("sea");
+    EXPECT_TRUE(dfa.exists("seasalt"));
+
+    dfa.erase("seasalt");
+    EXPECT_TRUE(dfa.exists("sun"));
+
+    dfa.erase("sun");
+    EXPECT_FALSE(dfa.exists("sun"));
+    EXPECT_FALSE(dfa.erase("sea"));
+}
+
+TEST(TPrefixDfa, EraseAll) {
+    TDfa dfa;
+    dfa.insert("the");
+    dfa.insert("this");
+
+    dfa.erase("this");
+    dfa.erase("the");
+
+    dfa.insert("these");
+    EXPECT_TRUE(dfa.exists("these"));
+}
