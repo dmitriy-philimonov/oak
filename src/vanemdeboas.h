@@ -31,8 +31,9 @@ namespace NvanEmdeBoas{
     class TvEB {
         /* for K = 31 it consumes around 21G, although operations do recursion no more than 5 times */
         static_assert(K <= 23, "G++ 8.1 hangs more than 10s creating a sequence of -1, poor asm generator ...");
-    private:
+    public:
         static constexpr ui32 U     = 0x1UL << K;
+    private:
         static constexpr ui32 LSU_K = K/2;
         static constexpr ui32 HSU_K = (K + K%2)/2;
         static constexpr ui32 LSU   = 0x1UL << LSU_K;
@@ -167,11 +168,12 @@ namespace NvanEmdeBoas{
 
     template<>
     class TvEB<1> {
+    public:
+        static constexpr ui32 U = 2;
     private:
         ui32 MIN=NIL;
         ui32 MAX=NIL;
 
-        static constexpr ui32 U = 2;
     public: /* O(1) all */
         bool Member(ui32 x) const noexcept {
             return x == MIN || x == MAX;
@@ -249,6 +251,7 @@ namespace NvanEmdeBoas{
         ui32 Maximum() const noexcept { return Tree.Maximum(); }
         ui32 Predecessor(ui32 x) const noexcept { return Tree.Predecessor(x); }
         ui32 Successor(ui32 x) const noexcept { return Tree.Successor(x); }
+        bool Member(ui32 x) const noexcept { return Tree.Member(x); }
         bool Insert(ui32 x) noexcept {
             if (x > MaxVal) return false;
             return Tree.Insert(x);
@@ -261,6 +264,7 @@ namespace NvanEmdeBoas{
             for (ui32 i: l) Insert(i);
         }
         void DebugPrint() const noexcept { return Tree.DebugPrint(); }
+        constexpr ui32 SizeU() const noexcept { return Tree.U; }
     };
 
 } //NvanEmdeBoas
