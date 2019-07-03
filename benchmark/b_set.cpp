@@ -1,3 +1,4 @@
+#include "avl.h"
 #include "rbset.h"
 #include "vanemdeboas.h"
 
@@ -9,7 +10,7 @@ constexpr ui32 N = 10000;
 
 // there was tests for insert - but, allegedly, it's the allocator's wars
 
-static void NUMBERS_CUSTOM_SET_SEARCH(benchmark::State& state) {
+static void NUMBERS_RBTREE_SEARCH(benchmark::State& state) {
     //setup
     NRBTree::TSet<ui32> set;
     for(ui32 i=0; i<N; ++i)
@@ -23,7 +24,7 @@ static void NUMBERS_CUSTOM_SET_SEARCH(benchmark::State& state) {
     }
     state.SetLabel("Size="+std::to_string(set.size()));
 }
-static void NUMBERS_CUSTOM_SET_SELECT(benchmark::State& state) {
+static void NUMBERS_RBTREE_SELECT(benchmark::State& state) {
     NRBTree::TSet<ui32> set;
     for(ui32 i=0; i<N; ++i)
         set.insert(i);
@@ -34,6 +35,17 @@ static void NUMBERS_CUSTOM_SET_SELECT(benchmark::State& state) {
                 std::cout << "BROKEN ON " << i << '\n';
     }
     state.SetLabel("Size="+std::to_string(set.size()));
+}
+static void NUMBERS_AVL_SET_SEARCH(benchmark::State& state) {
+    NAvl::TTree<ui32> tree;
+    for(ui32 i=0; i<N; ++i)
+        tree.Insert(i);
+    for(auto _ : state) {
+        ui32 i=N;
+        while(i--)
+            if (!tree.Member(i))
+                std::cout << "BROKEN ON " << i << '\n';
+    }
 }
 static void NUMBERS_STL_SET_SEARCH(benchmark::State& state) {
     std::set<ui32> set;
@@ -76,6 +88,7 @@ static void NUMBERS_VANEMDEBOAS_SEARCH(benchmark::State& state) {
 // Register the functions as a benchmarks
 BENCHMARK(NUMBERS_STL_SET_SEARCH);
 BENCHMARK(NUMBERS_STL_HASH_SEARCH);
-BENCHMARK(NUMBERS_CUSTOM_SET_SEARCH);
-BENCHMARK(NUMBERS_CUSTOM_SET_SELECT);
+BENCHMARK(NUMBERS_RBTREE_SEARCH);
+BENCHMARK(NUMBERS_RBTREE_SELECT);
+BENCHMARK(NUMBERS_AVL_SET_SEARCH);
 BENCHMARK(NUMBERS_VANEMDEBOAS_SEARCH);
