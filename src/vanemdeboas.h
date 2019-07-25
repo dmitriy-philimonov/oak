@@ -8,7 +8,7 @@
    Complexity of insert/delete/predecessor/successor operations is O(log log U),
    where U (the nearest larger power of 2) is the amount of integers [0..U-1] which the keys belong to.
    e.g. U = 2^32, K = log U = 32, O(log log U) = log 32 = 5
-   P.S. Minimum/Maximum
+   P.S. Complexity of Minimum/Maximum is constant // O(1)
  */
 
 #include "defines.h"
