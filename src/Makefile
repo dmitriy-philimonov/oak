@@ -1,4 +1,4 @@
-CXX=g++-8
+CXX=g++
 AR=ar
 CPPFLAGS=--std=c++2a -Wall -Werror -DPRINT_DEBUG -O3
 RM=rm -rf

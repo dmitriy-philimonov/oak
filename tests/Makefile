@@ -1,4 +1,4 @@
-CXX=g++-8
+CXX=g++
 RM=rm -rf
 BUILDDIR=../build
 SRCLIBDIR=../src
