@@ -1,6 +1,6 @@
 CXX=g++
 AR=ar
-CPPFLAGS=--std=c++2a -Wall -Werror -DPRINT_DEBUG -O3
+CPPFLAGS=--std=c++2a -Wall -Werror -DPRINT_DEBUG -O3 -march=native
 RM=rm -rf
 BUILDDIR=../build
 LIB=$(BUILDDIR)/liboak.a

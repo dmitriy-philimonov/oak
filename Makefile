@@ -1,5 +1,5 @@
 CXX=g++
-CPPFLAGS=--std=c++2a -Wall -Werror -DPRINT_DEBUG -O3
+CPPFLAGS=--std=c++2a -Wall -Werror -DPRINT_DEBUG -O3 -march=native
 RM=rm -rf
 BUILDDIR=./build
 TESTS=$(BUILDDIR)/test_oak

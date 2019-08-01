@@ -7,7 +7,7 @@ SRCLIB=$(BUILDDIR)/liboak.a
 INCLUDE=-I$(SRCLIBDIR) -I$(GOOGLE)/include
 LDPATH=-L$(GOOGLE)/lib -L$(BUILDDIR)
 LIBS=-loak -lgtest -lpthread
-CPPFLAGS=--std=c++2a -Wall -Werror $(INCLUDE) $(LDPATH) $(LIBS) -O3
+CPPFLAGS=--std=c++2a -Wall -Werror -march=native $(INCLUDE) $(LDPATH) $(LIBS) -O3
 
 SRC=$(wildcard *.cpp)
 OBJ=$(SRC:%.cpp=%.o)
