@@ -123,7 +123,7 @@ public:
                 S(l,o) = S(l-1,o)+S(l-1,o-1);
         }
     }
-    constexpr ui64 C(ui32 n, ui32 m) const noexcept {
+    constexpr I C(ui32 n, ui32 m) const noexcept {
         /*  number of combinations of m elements from n elements
                 C(n,m) = n! / (m! * (n-m)!)
             Level  = n + 1
