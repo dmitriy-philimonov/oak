@@ -31,7 +31,7 @@ public:
 
         D[from] = 0; fh.Decrease(from, 0); fh.DebugPrint();
         while(!fh.Empty()) {
-            u32 u = fh.Top(); fh.Pop();
+            u32 u = fh.Top().V; fh.Pop();
             std::cout << "TOP:" << u << '\n';
             for(TEdge edge: AdjL[u]) {
                 u32 newD = D[u] + edge.W;
