@@ -2,51 +2,7 @@
 #include <vector>
 
 
-#include "fibonacci_heap.h"
-
-
-class TFibonacciMinHeapGraph {
-    using TNode = TFibonacciNode<u32>;
-
-private:
-    std::vector<TNode> Store;
-    TFibonacciMinHeap<u32> FH;
-
-private:
-    /* 
-      In Fibonacci heap all nodes are connected into
-      doubly-linked cycle lists
-    */
-    bool IsUnused(TNode *x) const noexcept {
-        return x->l == nullptr; 
-    }
-public:
-    TFibonacciMinHeapGraph(u32 n)
-        : Store(n)
-    {}
-
-    bool Empty() const noexcept { return FH.Empty(); }
-
-    /* return minimum vertex (starts from zero) */
-    u32 Top() const noexcept {
-        TNode *min=FH.Minimum();
-        return min - &Store[0];
-    }
-    void Pop() noexcept {
-        FH.ExtractMin();
-    }
-    void Decrease(u32 v, u32 d) {
-        TNode *x = &Store[v];
-        if (IsUnused(x)) {
-            x->key = d;
-            FH.Insert(x);
-        } else FH.DecreaseKey(x, d);
-    }
-
-    void DebugPrint() const noexcept {
-        FH.DebugPrint();
-    }
-};
+#include "fibonacci_heap.hpp"
 
 
 class TDijkstra {

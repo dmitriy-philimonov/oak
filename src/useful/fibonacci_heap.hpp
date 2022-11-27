@@ -25,10 +25,9 @@
  */
 
 
-using i32 = int32_t;
 using u32 = uint32_t;
 
-template<typename IntType=i32>
+template<typename IntType=u32>
 struct TFibonacciNode {
     using TNode = TFibonacciNode;
     TNode* l; // left
@@ -171,9 +170,8 @@ public:
             z->l->r = z->r;
             z->r->l = z->l;
             Consolidate();
-            z->l=z->r=z;
         }
-        --N; return z;
+        --N; z->l=z->r=nullptr; return z;
     }
     void Union(TFibonacciMinHeap& other) {
         if (other.Min == nullptr) return;
@@ -189,7 +187,7 @@ public:
         other.Min = nullptr;
         other.N = 0;
     }
-    void DecreaseKey(TNode *x, i32 key) {
+    void DecreaseKey(TNode *x, IntType key) {
         if (key > x->key) return; // error
         x->key = key;
         TNode *y = x->p;
@@ -236,12 +234,64 @@ public:
     }
 };
 
+class TFibonacciMinHeapGraph {
+    using TNode = TFibonacciNode<u32>;
 
-#ifndef RUN_TESTS
+private:
+    std::vector<TNode> Store;
+    TFibonacciMinHeap<u32> FH;
+
+private:
+    /* 
+      In Fibonacci heap all nodes are connected into
+      doubly-linked cycle lists
+    */
+    bool IsUnused(const TNode *x) const noexcept {
+        return x->l == nullptr;
+    }
+    static constexpr u32 MAX=u32(-1);
+public:
+    TFibonacciMinHeapGraph(u32 n)
+        : Store(n)
+    {
+        for(u32 i=0; i<n; ++i) {
+            Store[i].key=MAX;
+            FH.Insert(&Store[i]);
+        }
+    }
+
+    bool Empty() const noexcept { return FH.Empty(); }
+    bool Has(u32 v) const noexcept { return !IsUnused(&Store[v]); }
+
+    /* return minimum vertex (starts from zero) */
+    struct TDV{
+        u32 D;
+        u32 V;
+    };
+    TDV Top() const noexcept {
+        TNode *min=FH.Minimum();
+        return TDV{min->key, u32(min - &Store[0])};
+    }
+    void Pop() noexcept {
+        FH.ExtractMin();
+    }
+    void Decrease(u32 v, u32 d) {
+        TNode *x = &Store[v];
+        if (IsUnused(x)) return;
+        FH.DecreaseKey(x, d);
+    }
+
+    void DebugPrint() const noexcept {
+        FH.DebugPrint();
+    }
+};
+
+
+#ifdef RUN_TESTS
 #include "cache64.hpp"
 #include "printer.hpp"
 void run_tests() {
-    struct TStore : TCache64<TFibonacciNode<u32>, 32> {
+    struct TStore : TCache64k<TFibonacciNode<u32>, 32> {
         using TNode = TFibonacciNode<u32>;
         TNode *MakeNode(i32 key) {
             TNode *x = Allocate();
